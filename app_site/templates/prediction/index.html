@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Energy Consumption Prediction</title>
+</head>
+<body>
+    <h2>Energy Consumption Prediction</h2>
+    <form method="post" action="{% url 'predict' %}">
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        {% csrf_token %}
+        <label>Day of Week:</label>
+        <input type="number" name="day_of_week"><br>
+        
+        <label>Holiday (0 or 1):</label>
+        <input type="number" name="holiday"><br>
+        
+        <label>HVAC Usage:</label>
+        <input type="number" name="hvac_usage"><br>
+        
+        <label>Lighting Usage:</label>
+        <input type="number" name="lighting_usage"><br>
+        
+        <button type="submit">Predict</button>
+    </form>
+    
+    {% if prediction %}
+        <h3>Predicted Energy Consumption: {{ prediction }}</h3>
+    {% endif %}
+</body>
+</html>
