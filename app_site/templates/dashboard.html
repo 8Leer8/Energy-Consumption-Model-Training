@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Energy Consumption Predictor{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h2 class="text-3xl font-bold text-gray-900 text-center">
+        <i class="fas fa-tachometer-alt text-indigo-600 mr-3"></i>Energy Consumption Dashboard
+    </h2>
+    
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Total Records Card -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-lg font-semibold text-white mb-2">
+                    <i class="fas fa-database mr-2"></i>Total Records
+                </h5>
+                <p class="text-4xl font-bold text-white">{{ total_records }}</p>
+            </div>
+        </div>
+
+        <!-- Average Consumption Card -->
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-lg font-semibold text-white mb-2">
+                    <i class="fas fa-calculator mr-2"></i>Average Consumption
+                </h5>
+                <p class="text-4xl font-bold text-white">{{ avg_consumption }}</p>
+            </div>
+        </div>
+
+        <!-- Median Consumption Card -->
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-lg font-semibold text-white mb-2">
+                    <i class="fas fa-chart-bar mr-2"></i>Median Consumption
+                </h5>
+                <p class="text-4xl font-bold text-white">{{ median_consumption }}</p>
+            </div>
+        </div>
+
+        <!-- Max Consumption Card -->
+        <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-lg font-semibold text-white mb-2">
+                    <i class="fas fa-arrow-up mr-2"></i>Max Consumption
+                </h5>
+                <p class="text-4xl font-bold text-white">{{ max_consumption }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Performance Section -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="p-6">
+            <h5 class="text-xl font-semibold text-gray-900 mb-4">
+                <i class="fas fa-chart-line text-indigo-600 mr-2"></i>Model Performance
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Performance Metrics Chart -->
+                <div>
+                    <div id="metrics-chart" class="h-80"></div>
+                </div>
+                <!-- Performance Metrics Details -->
+                <div class="space-y-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h6 class="text-lg font-semibold text-gray-900 mb-2">
+                            <i class="fas fa-cogs mr-2"></i>Model Metrics
+                        </h6>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">
+                                    <i class="fas fa-square-root-alt mr-2"></i>Root Mean Square Error (RMSE):
+                                </span>
+                                <span class="font-semibold text-gray-900">{{ model_metrics.rmse }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">
+                                    <i class="fas fa-ruler mr-2"></i>Mean Absolute Error (MAE):
+                                </span>
+                                <span class="font-semibold text-gray-900">{{ model_metrics.mae }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">
+                                    <i class="fas fa-percentage mr-2"></i>R² Score:
+                                </span>
+                                <span class="font-semibold text-gray-900">{{ model_metrics.r2 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h6 class="text-lg font-semibold text-blue-900 mb-2">
+                            <i class="fas fa-info-circle mr-2"></i>Interpretation
+                        </h6>
+                        <ul class="space-y-2 text-sm text-blue-800">
+                            <li>• RMSE: Lower values indicate better fit (in same units as target)</li>
+                            <li>• MAE: Average absolute difference between predictions and actual values</li>
+                            <li>• R² Score: Proportion of variance explained by the model (0-1, higher is better)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Monthly Chart -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-calendar-alt text-indigo-600 mr-2"></i>Energy Consumption by Month
+                </h5>
+                <div id="monthly-chart" class="h-80"></div>
+            </div>
+        </div>
+
+        <!-- Hourly Chart -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-clock text-indigo-600 mr-2"></i>Energy Consumption by Hour
+                </h5>
+                <div id="hourly-chart" class="h-80"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Importance and Latest Prediction -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Feature Importance -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-star text-indigo-600 mr-2"></i>Feature Importance
+                </h5>
+                <div id="feature-chart" class="h-80"></div>
+            </div>
+        </div>
+
+        <!-- Latest Prediction -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h5 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-bolt text-indigo-600 mr-2"></i>Latest Prediction
+                </h5>
+                {% if latest_prediction %}
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h6 class="text-lg font-semibold text-blue-900 mb-2">
+                            <i class="fas fa-info-circle mr-2"></i>Prediction Details
+                        </h6>
+                        <p class="text-2xl font-bold text-blue-600 mb-4">
+                            <i class="fas fa-bolt mr-2"></i>{{ latest_prediction.prediction|floatformat:2 }} kWh
+                        </p>
+                        <div class="space-y-2 text-sm text-gray-600">
+                            <p><i class="far fa-clock mr-2"></i>Timestamp: {{ latest_prediction.timestamp }}</p>
+                            <div class="mt-4">
+                                <h6 class="font-semibold text-gray-900 mb-2">
+                                    <i class="fas fa-list mr-2"></i>Input Parameters:
+                                </h6>
+                                <ul class="space-y-1">
+                                    <li><i class="fas fa-calendar mr-2"></i>Month: {{ latest_prediction.input_data.month }}</li>
+                                    <li><i class="fas fa-clock mr-2"></i>Hour: {{ latest_prediction.input_data.hour }}</li>
+                                    <li><i class="fas fa-temperature-high mr-2"></i>Temperature: {{ latest_prediction.input_data.temperature }}°C</li>
+                                    <li><i class="fas fa-tint mr-2"></i>Humidity: {{ latest_prediction.input_data.humidity }}%</li>
+                                    <li><i class="fas fa-ruler-combined mr-2"></i>Square Footage: {{ latest_prediction.input_data.square_footage }} sq ft</li>
+                                    <li><i class="fas fa-users mr-2"></i>Occupancy: {{ latest_prediction.input_data.occupancy }} people</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="bg-yellow-50 rounded-lg p-4">
+                        <p class="text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>No predictions have been made yet. Try making a prediction using the prediction form!
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Helper to safely parse JSON
+    function safeParse(jsonStr) {
+        try { return JSON.parse(jsonStr); } catch (e) { return {data:[], layout:{title:'No Data'}}; }
+    }
+
+    // Common layout for all charts
+    const commonLayout = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        font: {
+            family: "'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'",
+            color: '#374151', // Tailwind gray-700
+            size: 16
+        },
+        margin: { l: 50, r: 30, t: 50, b: 50 },
+    };
+
+    // Plotly config to hide modebar and make responsive
+    const config = {
+        displayModeBar: false, // Hide toolbar
+        responsive: true
+    };
+
+    // Monthly consumption chart
+    var monthlyData = safeParse('{{ monthly_data|escapejs }}');
+    Plotly.newPlot('monthly-chart', monthlyData.data, {
+        ...monthlyData.layout,
+        ...commonLayout
+    }, config);
+
+    // Hourly consumption chart
+    var hourlyData = safeParse('{{ hourly_data|escapejs }}');
+    Plotly.newPlot('hourly-chart', hourlyData.data, {
+        ...hourlyData.layout,
+        ...commonLayout
+    }, config);
+
+    // Feature importance chart
+    var featureData = safeParse('{{ feature_data|escapejs }}');
+    Plotly.newPlot('feature-chart', featureData.data, {
+        ...featureData.layout,
+        ...commonLayout,
+        margin: { l: 150, r: 30, t: 60, b: 50 },
+        title: {
+            text: 'Feature Importance in Energy Consumption Prediction',
+            font: { size: 20, family: "'Inter', 'ui-sans-serif'", color: '#111827' },
+            x: 0.5,
+            xanchor: 'center'
+        }
+    }, config);
+
+    // Model performance metrics chart
+    var metricsData = safeParse('{{ metrics_data|escapejs }}');
+    Plotly.newPlot('metrics-chart', metricsData.data, {
+        ...metricsData.layout,
+        ...commonLayout,
+        margin: { l: 50, r: 30, t: 60, b: 50 },
+        title: {
+            text: 'Model Performance Metrics',
+            font: { size: 20, family: "'Inter', 'ui-sans-serif'", color: '#111827' },
+            x: 0.5,
+            xanchor: 'center'
+        }
+    }, config);
+</script>
+{% endblock %} 

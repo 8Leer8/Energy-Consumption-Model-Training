@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Energy Consumption Predictor{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12">
+    <!-- Intro Section -->
+    <div class="text-center mb-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+            <i class="fas fa-bolt text-yellow-500 mr-3"></i>Energy Consumption Predictor
+        </h1>
+        <p class="text-lg text-gray-600 mb-6">
+            <i class="fas fa-robot text-indigo-600 mr-2"></i>Welcome to your all-in-one platform for accurate, AI-powered energy consumption forecasting. Make smarter decisions, reduce costs, and support sustainability with ease.
+        </p>
+        {% if user.is_authenticated %}
+            <div class="flex flex-col md:flex-row justify-center gap-4 mt-6">
+                <a href="{% url 'predict' %}" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-700 transition text-lg">
+                    <i class="fas fa-chart-line mr-2"></i>Make a Prediction
+                </a>
+                <a href="{% url 'dashboard' %}" class="px-8 py-3 bg-gray-200 text-gray-900 font-semibold rounded-md shadow hover:bg-gray-300 transition text-lg">
+                    <i class="fas fa-tachometer-alt mr-2"></i>View Dashboard
+                </a>
+            </div>
+        {% else %}
+            <div class="flex flex-col md:flex-row justify-center gap-4 mt-6">
+                <a href="{% url 'login' %}" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-700 transition text-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+                <a href="{% url 'register' %}" class="px-8 py-3 bg-gray-200 text-gray-900 font-semibold rounded-md shadow hover:bg-gray-300 transition text-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Register
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- What is this? -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-10">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">
+            <i class="fas fa-question-circle text-indigo-600 mr-2"></i>What is Energy Consumption Predictor?
+        </h2>
+        <p class="text-gray-700 text-center max-w-2xl mx-auto">
+            <i class="fas fa-brain text-indigo-600 mr-2"></i>Energy Consumption Predictor is a web-based tool that leverages advanced machine learning to forecast building energy usage. It is designed for both professionals and everyday users who want actionable insights into their energy consumption patterns.
+        </p>
+    </div>
+
+    <!-- Purpose Section -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-10">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">
+            <i class="fas fa-bullseye text-indigo-600 mr-2"></i>Purpose
+        </h2>
+        <p class="text-gray-700 text-center max-w-2xl mx-auto">
+            <i class="fas fa-leaf text-green-600 mr-2"></i>The purpose of this project is to empower users to make data-driven decisions, optimize energy usage, reduce operational costs, and contribute to a more sustainable future.
+        </p>
+    </div>
+
+    <!-- Uses Section -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-10">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">
+            <i class="fas fa-tasks text-indigo-600 mr-2"></i>Uses
+        </h2>
+        <ul class="list-none text-gray-700 max-w-2xl mx-auto space-y-3">
+            <li class="flex items-center">
+                <i class="fas fa-chart-line text-indigo-600 mr-3"></i>
+                Forecast monthly or daily energy consumption for buildings and facilities
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-chart-bar text-indigo-600 mr-3"></i>
+                Identify trends and patterns in energy usage
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-coins text-indigo-600 mr-3"></i>
+                Support budgeting and resource planning
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-chart-pie text-indigo-600 mr-3"></i>
+                Monitor the impact of energy-saving initiatives
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-graduation-cap text-indigo-600 mr-3"></i>
+                Educate users on efficient energy practices
+            </li>
+        </ul>
+    </div>
+
+    <!-- Advantages Section -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-10">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">
+            <i class="fas fa-star text-indigo-600 mr-2"></i>Advantages
+        </h2>
+        <ul class="list-none text-gray-700 max-w-2xl mx-auto space-y-3">
+            <li class="flex items-center">
+                <i class="fas fa-mouse-pointer text-indigo-600 mr-3"></i>
+                Easy-to-use, intuitive interface for all users
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-desktop text-indigo-600 mr-3"></i>
+                Interactive dashboard for visual insights
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-building text-indigo-600 mr-3"></i>
+                Supports both business and personal energy management
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-hand-holding-usd text-indigo-600 mr-3"></i>
+                Helps reduce costs and environmental impact
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

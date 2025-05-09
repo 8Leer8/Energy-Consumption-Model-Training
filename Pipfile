@@ -5,6 +5,17 @@ name = "pypi"
 
 [packages]
 django = "*"
+pandas = "*"
+numpy = "*"
+scikit-learn = "*"
+joblib = "*"
+matplotlib = "*"
+seaborn = "*"
+django-crispy-forms = "==2.1"
+crispy-bootstrap5 = "==2023.10"
+plotly = "*"
+openpyxl = "*"
+xgboost = "*"
 
 [dev-packages]
 
